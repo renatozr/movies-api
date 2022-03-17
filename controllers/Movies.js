@@ -3,7 +3,12 @@ const MoviesService = require('../services/Movies');
 const create = async (req, res) => {
   const { title, directedBy, releaseYear } = req.body;
 
-  const movieId = await MoviesService.create(title, directedBy, releaseYear);
+  const {
+    message,
+    movieId
+  } = await MoviesService.create(title, directedBy, releaseYear);
+
+  if (message) return res.status(400).json({ message });
 
   res.status(201).json({ id: movieId, title, directedBy, releaseYear });
 };

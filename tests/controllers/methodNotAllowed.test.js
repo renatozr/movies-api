@@ -3,7 +3,7 @@ const sinon = require('sinon');
 
 const methodNotAllowed = require('../../controllers/methodNotAllowed');
 
-describe('Ao requisitar rotas incongruentes o controller "methodNotAllowed" é chamado', () => {
+describe('O controller "methodNotAllowed"', () => {
   const req = {};
   const res = {};
 
@@ -12,10 +12,13 @@ describe('Ao requisitar rotas incongruentes o controller "methodNotAllowed" é c
     res.end = sinon.stub().returns();
   });
 
-  it('retorna ao cliente o status 405 sem nenhuma informação', () => {
+  it('responde com o status 405', () => {
     methodNotAllowed(req, res);
 
     expect(res.status.calledWith(405)).to.be.equal(true);
-    expect(res.end.calledWith()).to.be.equal(true);
+  });
+
+  it('retorna nenhum conteúdo', () => {
+    expect(res.end.called).to.be.equal(true);
   });
 });
