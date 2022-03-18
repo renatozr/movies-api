@@ -42,7 +42,7 @@ describe('O método "create" de MoviesController', () => {
     });
   });
 
-  describe('quando os dados do filme passados na requisição são inválidos', () => {
+  describe('quando os dados do filme são inválidos', () => {
     const message = 'Dados inválidos!';
 
     before(() => {
