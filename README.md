@@ -11,3 +11,6 @@
 ### Arquiteturas
 - Software: MSC
 - Web: REST
+
+### Método de desenvolvimento
+- TDD (não perfeitamente, estou aprendendo)
