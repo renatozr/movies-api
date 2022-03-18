@@ -1,5 +1,5 @@
 # movies-api
-## REST API de filmes, feita com propósitos educativos.
+## REST API de filmes, feita com propósitos de aprendizado.
 
 ### Techs
 - Node
