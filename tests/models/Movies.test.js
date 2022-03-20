@@ -136,3 +136,24 @@ describe('O método "update" de MoviesModel', () => {
     });
   });
 });
+
+describe('O método "exclude" de MoviesModel', () => {
+  describe('quando exclui o filme no banco de dados', () => {
+    const movieId = 1;
+
+    before(() => {
+      sinon.stub(connection, 'execute').resolves();
+    });
+
+    after(() => {
+      connection.execute.restore();
+    });
+
+    it('exclui o filme, sem retornar nada', async () => {
+      const response = await MoviesModel.exclude(movieId);
+
+      expect(connection.execute.calledOnce).to.be.equal(true);
+      expect(response).to.be.equal(undefined);
+    });
+  });
+});

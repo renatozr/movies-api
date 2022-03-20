@@ -32,9 +32,12 @@ const update = async (id, title, directedBy, releaseYear) => {
   return movie[0];
 };
 
+const exclude = async (id) => await connection.execute('DELETE FROM movies WHERE id = ?;', [id]);
+
 module.exports = {
   create,
   getAll,
   getById,
-  update
+  update,
+  exclude,
 };
