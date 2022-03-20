@@ -1,32 +1,9 @@
 const MoviesModel = require('../models/Movies');
 
-const validateMovie = (title, directedBy, releaseYear) => {
-  switch (true) {
-    case !title:
-      return '"title" é um dado obrigatório';
-    case title.length > 100:
-      return '"title" não pode ter mais que 100 caracteres';
-    case !directedBy:
-      return '"directedBy" é um dado obrigatório';
-    case directedBy.length > 50:
-      return '"directedBy" não pode ter mais que 50 caracteres';
-    case !releaseYear:
-      return '"releaseYear" é um dado obrigatório';
-    case !/^\d{4}$/.test(releaseYear.toString()):
-      return '"releaseYear" deve ser um número inteiro de 4 dígitos';
-    default:
-      return null;
-  }
-};
+const add = async (title, directedBy, releaseYear) => {
+  const addedMovieId = await MoviesModel.add(title, directedBy, releaseYear);
 
-const create = async (title, directedBy, releaseYear) => {
-  const message = validateMovie(title, directedBy, releaseYear);
-
-  if (message) return { message };
-
-  const movieId = await MoviesModel.create(title, directedBy, releaseYear);
-
-  return { movieId };
+  return addedMovieId;
 };
 
 const getAll = async () => {
@@ -35,7 +12,22 @@ const getAll = async () => {
   return movies;
 };
 
+const getById = async (id) => {
+  const movie = await MoviesModel.getById(id);
+
+  return movie;
+};
+
+const update = async (id, title, directedBy, releaseYear) => (
+  await MoviesModel.update(id, title, directedBy, releaseYear)
+);
+
+const exclude = async (id) => await MoviesModel.exclude(id);
+
 module.exports = {
-  create,
+  add,
   getAll,
+  getById,
+  update,
+  exclude,
 };

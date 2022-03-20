@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
 
-const methodNotAllowed = require('../../controllers/methodNotAllowed');
+const methodNotAllowed = require('../../middlewares/methodNotAllowed');
 
 describe('O controller "methodNotAllowed"', () => {
   const req = {};
