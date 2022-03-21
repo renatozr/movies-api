@@ -1,75 +1,96 @@
-// const { expect } = require('chai');
-// const sinon = require('sinon');
+const { expect } = require('chai');
+const sinon = require('sinon');
 
-// const MoviesService = require('../../services/Movies');
-// const MoviesModel = require('../../models/Movies');
+const MoviesService = require('../../services/Movies');
+const MoviesModel = require('../../models/Movies');
+const {
+  serializedMoviesPayload,
+  serializedMoviePayload,
+} = require('../data/Movies');
 
-// describe('O método "create" de MoviesService', () => {
-//   const title = 'Matrix';
-//   const directedBy = 'Lana Wachowski, Lilly Wachowski';
-//   const releaseYear = 1999;
+describe('Movies Service', () => {
+  before(() => {
+    sinon.stub(MoviesModel, 'add');
+    sinon.stub(MoviesModel, 'getAll');
+    sinon.stub(MoviesModel, 'getById');
+    sinon.stub(MoviesModel, 'update');
+    sinon.stub(MoviesModel, 'exclude');
+  });
 
-//   describe('quando os dados do filme são válidos', () => {
-//     const movieId = 6;
+  after(() => {
+    MoviesModel.add.restore();
+    MoviesModel.getAll.restore();
+    MoviesModel.getById.restore();
+    MoviesModel.update.restore();
+    MoviesModel.exclude.restore();
+  });
 
-//     before(() => {
-//       sinon.stub(MoviesModel, 'create').resolves(movieId);
-//     });
+  describe('add', () => {
+    const { id, title, directedBy, releaseYear } = serializedMoviePayload;
 
-//     after(() => {
-//       MoviesModel.create.restore();
-//     });
+    before(() => {
+      MoviesModel.add.resolves(id);
+    });
 
-//     it('retorna um objeto com o id do filme', async () => {
-//       const response = await MoviesService.create(title, directedBy, releaseYear);
+    it('chama MoviesModel.add e retorna o id do filme adicionado', async () => {
+      const response = await MoviesService.add(title, directedBy, releaseYear);
 
-//       expect(response.movieId).to.be.equal(movieId);
-//     });
-//   });
+      expect(MoviesModel.add.calledOnce).to.be.true;
+      expect(MoviesModel.add.calledWith(title, directedBy, releaseYear)).to.be.true;
+      expect(response).to.be.equal(id);
+    });
+  });
 
-//   describe('quando os dados do filme são inválidos', async () => {
-//     ['title', 'directedBy', 'releaseYear'].forEach((paramsName, idx) => {
-//       describe(`"${paramsName}" indefinido`, () => {
-//         it(`retorna um objeto com a mensagem: "${paramsName}" é um dado obrigatório`, async () => {
-//           const response = await MoviesService.create(
-//             idx === 0 ? undefined : title,
-//             idx === 1 ? undefined : directedBy,
-//             idx === 2 ? undefined : releaseYear,
-//             );
+  describe('getAll', () => {
+    before(() => {
+      MoviesModel.getAll.resolves(serializedMoviesPayload);
+    });
 
-//           expect(response.message).to.be.equal(`"${paramsName}" é um dado obrigatório`);
-//         });
-//       });
-//     });
+    it('chama MoviesModel.getAll e retorna todos os filmes', async () => {
+      const response = await MoviesModel.getAll();
+
+      expect(MoviesModel.getAll.calledOnce).to.be.true;
+      expect(response).to.be.equal(serializedMoviesPayload);
+    });
+  });
+
+  describe('getById', () => {
+    const { id } = serializedMoviePayload;
   
-//     describe('"title" tem mais que 100 caracteres', () => {
-//       const unvalidTitle = '12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901'
+    before(() => {
+      MoviesModel.getById.resolves(serializedMoviePayload);
+    });
 
-//       it('retorna um objeto com a mensagem: "title" não pode ter mais que 100 caracteres', async () => {
-//         const response = await MoviesService.create(unvalidTitle, directedBy, releaseYear);
+    it('chama MoviesModel.getById e retorna o filme', async () => {
+      const response = await MoviesModel.getById(id);
 
-//         expect(response.message).to.be.equal('"title" não pode ter mais que 100 caracteres');
-//       });
-//     });
+      expect(MoviesModel.getById.calledOnce).to.be.true;
+      expect(MoviesModel.getById.calledWith(id)).to.be.true;
+      expect(response).to.be.equal(serializedMoviePayload);
+    });
+  });
 
-//     describe('"directedBy" tem mais que 50 caracteres', () => {
-//       const unvalidDirectedBy = '123456789012345678901234567890123456789012345678901';
+  describe('update', () => {
+    const { id, title, directedBy, releaseYear } = serializedMoviePayload;
 
-//       it('retorna um objeto com a mensagem: "directedBy" não pode ter mais que 50 caracteres', async () => {
-//         const response = await MoviesService.create(title, unvalidDirectedBy, releaseYear);
+    it('chama MoviesModel.update sem retornar nada', async () => {
+      const response = await MoviesModel.update(id, title, directedBy, releaseYear);
 
-//         expect(response.message).to.be.equal('"directedBy" não pode ter mais que 50 caracteres');
-//       });
-//     });
+      expect(MoviesModel.update.calledOnce).to.be.true;
+      expect(MoviesModel.update.calledWith(id, title, directedBy, releaseYear)).to.be.true;
+      expect(response).to.be.undefined;
+    });
+  });
 
-//     describe('"releaseYear" não é um número inteiro de 4 dígitos', () => {
-//       const unvalidReleaseYear = 123.4;
+  describe('exclude', () => {
+    const { id } = serializedMoviePayload;
 
-//       it('retorna um objeto com a mensagem: "releaseYear" deve ser um número inteiro de 4 dígitos', async () => {
-//         const response = await MoviesService.create(title, directedBy, unvalidReleaseYear);
+    it('chama MoviesModel.exclude sem retornar nada', async () => {
+      const response = await MoviesModel.exclude(id);
 
-//         expect(response.message).to.be.equal('"releaseYear" deve ser um número inteiro de 4 dígitos');
-//       });
-//     });
-//   });
-// });
+      expect(MoviesModel.exclude.calledOnce).to.be.true;
+      expect(MoviesModel.exclude.calledWith(id)).to.be.true;
+      expect(response).to.be.undefined;
+    });
+  });
+});
