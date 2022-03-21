@@ -1,11 +1,10 @@
 const express = require('express');
 const rescue = require('express-rescue');
-
-const router = express.Router();
-
 const MoviesController = require('../controllers/Movies');
 const MoviesMiddleware = require('../middlewares/Movies');
 const methodNotAllowed = require('../middlewares/methodNotAllowed');
+
+const router = express.Router();
 
 router.route('/')
   .post([

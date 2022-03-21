@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
-const MoviesRouter = ('./routers/Movies.js');
+const MoviesRouter = require('./routers/Movies');
 const error = require('./middlewares/error');
 
 const app = express();

@@ -12,7 +12,7 @@ const validateMovieData = (title, directedBy, releaseYear) => {
       return '"directedBy" não pode ter mais que 50 caracteres';
     case !releaseYear:
       return '"releaseYear" é um dado obrigatório';
-    case !/^\d{4}$/.test(releaseYear.toString()):
+    case typeof releaseYear !== 'number' || releaseYear.toString().length !== 4:
       return '"releaseYear" deve ser um número inteiro de 4 dígitos';
     default:
       return null;
