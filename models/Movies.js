@@ -33,15 +33,19 @@ const getById = async (id) => {
   return row.map(serialize)[0];
 };
 
-const update = async (id,title, directedBy, releaseYear) => await connection.execute(
-  'UPDATE movies SET title = ?, directed_by = ?, release_year = ? WHERE id = ?;',
-  [title, directedBy, releaseYear, id],
-);
+const update = async (id,title, directedBy, releaseYear) => {
+  await connection.execute(
+    'UPDATE movies SET title = ?, directed_by = ?, release_year = ? WHERE id = ?;',
+    [title, directedBy, releaseYear, id],
+  );
+};
 
-const exclude = async (id) => await connection.execute(
-  'DELETE FROM movies WHERE id = ?;',
-  [id],
-);
+const exclude = async (id) => {
+  await connection.execute(
+    'DELETE FROM movies WHERE id = ?;',
+    [id],
+  );
+};
 
 module.exports = {
   add,

@@ -3,157 +3,104 @@ const sinon = require('sinon');
 
 const MoviesModel = require('../../models/Movies');
 const connection = require('../../models/connection');
+const {
+  moviesPayload,
+  serializedMoviesPayload,
+  moviePayload,
+  serializedMoviePayload,
+} = require('../data/Movies');
 
-describe('O método "create" de MoviesModel', () => {
-  const title = 'Matrix';
-  const directedBy = 'Lana Wachowski, Lilly Wachowski';
-  const releaseYear = 1999;
+describe('Movies models', () => {
+  before(() => {
+    sinon.stub(connection, 'execute');
+  });
 
-  describe('quando cria um novo filme no banco de dados', () => {
-    const movieId = 6;
+  after(() => {
+    connection.execute.restore();
+  });
+
+  describe('add', () => {
+    const { id, title, directedBy, releaseYear } = serializedMoviePayload;
 
     before(() => {
-      sinon.stub(connection, 'execute').resolves([{ insertId: movieId }]);
+      connection.execute.resolves([{ insertId: id }]);
     });
 
     after(() => {
-      connection.execute.restore();
+      connection.execute.reset();
     });
 
-    it('retorna o id do filme', async () => {
-      const response = await MoviesModel.create(title, directedBy, releaseYear);
+    it('adiciona novo filme no banco de dados e retorna o id do mesmo', async () => {
+      const response = await MoviesModel.add(title, directedBy, releaseYear);
 
-      expect(response).to.be.equal(movieId);
+      expect(connection.execute.calledOnce).to.be.true;
+      expect(response).to.be.equal(id);
     });
   });
-});
 
-describe('O método "getAll" de MoviesModel', () => {
-  describe('quando pega os filmes no banco de dados', () => {
-    const moviesPayload = [
-      {
-        id: 1,
-        title: "Um sonho de liberdade",
-        directed_by: "Frank Darabont",
-        release_year: 1994
-      },
-      {
-        id: 2,
-        title: "O Poderoso Chefão",
-        directed_by: "Francis Ford Coppola",
-        release_year: 1972
-      },
-      {
-        id: 3,
-        title: "Batman: O Cavaleiro das Trevas",
-        directed_by: "Christopher Nolan",
-        release_year: 2008
-      }
-    ];
-
+  describe('getAll', () => {
     before(() => {
-      sinon.stub(connection, 'execute').resolves([moviesPayload]);
+      connection.execute.resolves([moviesPayload]);
     });
 
     after(() => {
-      connection.execute.restore();
+      connection.execute.reset();
     });
 
-    it('retorna um array com os filmes', async () => {
+    it('busca todos os filmes no banco de dados e os retorna', async () => {
       const response = await MoviesModel.getAll();
 
-      expect(response).to.be.equal(moviesPayload);
-    });
-  });
-});
-
-describe('O método "getById" de MoviesModel', () => {
-  describe('quando pega o filme no banco de dados', () => {
-    const moviePayload = [{
-        id: 1,
-        title: "Um sonho de liberdade",
-        directed_by: "Frank Darabont",
-        release_year: 1994
-    }];
-    const movieId = 1;
-
-    before(() => {
-      sinon.stub(connection, 'execute').resolves([moviePayload]);
-    });
-
-    after(() => {
-      connection.execute.restore();
-    });
-
-    it('retorna o filme', async () => {
-      const response = await MoviesModel.getById(movieId);
-
-      expect(response).to.be.equal(moviePayload[0]);
+      expect(connection.execute.calledOnce).to.be.true;
+      expect(response).to.be.deep.equal(serializedMoviesPayload);
     });
   });
 
-  describe('quando o filme não existe no banco de dados', () => {
-    const movieId = 999;
-
+  describe('getById', () => {
+    const { id } = moviePayload;
+  
     before(() => {
-      sinon.stub(connection, 'execute').resolves([[]]);
+      connection.execute.resolves([[moviePayload]]);
     });
 
     after(() => {
-      connection.execute.restore();
+      connection.execute.reset();
     });
 
-    it('retorna o filme', async () => {
-      const response = await MoviesModel.getById(movieId);
+    it('busca o filme pelo id no banco de dados e o retorna', async () => {
+      const response = await MoviesModel.getById(id);
 
-      expect(response).to.be.equal(null);
+      expect(connection.execute.calledOnce).to.be.true;
+      expect(response).to.be.deep.equal(serializedMoviePayload);
     });
   });
-});
 
-describe('O método "update" de MoviesModel', () => {
-  describe('quando atualiza o filme no banco de dados', () => {
-    const moviePayload = [{
-        id: 1,
-        title: "Um sonho de liberdade",
-        directed_by: "Frank Darabont",
-        release_year: 1994
-    }];
-    const movieId = 1;
-
-    before(() => {
-      sinon.stub(connection, 'execute').resolves([moviePayload]);
-    });
+  describe('update', () => {
+    const { id, title, directedBy, releaseYear } = serializedMoviePayload;
 
     after(() => {
-      connection.execute.restore();
+      connection.execute.resetHistory();
     });
 
-    it('retorna o filme', async () => {
-      const response = await MoviesModel.update(movieId);
+    it('atualiza o filme no banco de dados sem retornar nada', async () => {
+      const response = await MoviesModel.update(id, title, directedBy, releaseYear);
 
-      expect(response).to.be.equal(moviePayload[0]);
+      expect(connection.execute.calledOnce).to.be.true;
+      expect(response).to.be.undefined;
     });
   });
-});
 
-describe('O método "exclude" de MoviesModel', () => {
-  describe('quando exclui o filme no banco de dados', () => {
-    const movieId = 1;
-
-    before(() => {
-      sinon.stub(connection, 'execute').resolves();
-    });
+  describe('exclude', () => {
+    const { id } = moviePayload;
 
     after(() => {
-      connection.execute.restore();
+      connection.execute.resetHistory();
     });
 
-    it('exclui o filme, sem retornar nada', async () => {
-      const response = await MoviesModel.exclude(movieId);
+    it('exclui o filme no banco de dados sem retornar nada', async () => {
+      const response = await MoviesModel.exclude(id);
 
-      expect(connection.execute.calledOnce).to.be.equal(true);
-      expect(response).to.be.equal(undefined);
+      expect(connection.execute.calledOnce).to.be.true;
+      expect(response).to.be.undefined;
     });
   });
 });

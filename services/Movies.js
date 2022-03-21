@@ -18,11 +18,13 @@ const getById = async (id) => {
   return movie;
 };
 
-const update = async (id, title, directedBy, releaseYear) => (
-  await MoviesModel.update(id, title, directedBy, releaseYear)
-);
+const update = async (id, title, directedBy, releaseYear) => {
+  await MoviesModel.update(id, title, directedBy, releaseYear);
+};
 
-const exclude = async (id) => await MoviesModel.exclude(id);
+const exclude = async (id) => {
+  await MoviesModel.exclude(id);
+};
 
 module.exports = {
   add,
