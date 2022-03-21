@@ -47,7 +47,7 @@ describe('Movies Service', () => {
     });
 
     it('chama MoviesModel.getAll e retorna todos os filmes', async () => {
-      const response = await MoviesModel.getAll();
+      const response = await MoviesService.getAll();
 
       expect(MoviesModel.getAll.calledOnce).to.be.true;
       expect(response).to.be.equal(serializedMoviesPayload);
@@ -62,7 +62,7 @@ describe('Movies Service', () => {
     });
 
     it('chama MoviesModel.getById e retorna o filme', async () => {
-      const response = await MoviesModel.getById(id);
+      const response = await MoviesService.getById(id);
 
       expect(MoviesModel.getById.calledOnce).to.be.true;
       expect(MoviesModel.getById.calledWith(id)).to.be.true;
@@ -74,7 +74,7 @@ describe('Movies Service', () => {
     const { id, title, directedBy, releaseYear } = serializedMoviePayload;
 
     it('chama MoviesModel.update sem retornar nada', async () => {
-      const response = await MoviesModel.update(id, title, directedBy, releaseYear);
+      const response = await MoviesService.update(id, title, directedBy, releaseYear);
 
       expect(MoviesModel.update.calledOnce).to.be.true;
       expect(MoviesModel.update.calledWith(id, title, directedBy, releaseYear)).to.be.true;
@@ -86,7 +86,7 @@ describe('Movies Service', () => {
     const { id } = serializedMoviePayload;
 
     it('chama MoviesModel.exclude sem retornar nada', async () => {
-      const response = await MoviesModel.exclude(id);
+      const response = await MoviesService.exclude(id);
 
       expect(MoviesModel.exclude.calledOnce).to.be.true;
       expect(MoviesModel.exclude.calledWith(id)).to.be.true;
