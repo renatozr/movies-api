@@ -5,7 +5,7 @@ CREATE DATABASE movies_db;
 USE movies_db;
 
 CREATE TABLE movies (
-	id INT NOT NULL AUTO_INCREMENT,
+  id INT NOT NULL AUTO_INCREMENT,
   title VARCHAR(100) NOT NULL,
   directed_by VARCHAR(50) NOT NULL,
   release_year YEAR NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE movies (
 );
 
 INSERT INTO movies
-	(title, directed_by, release_year)
+  (title, directed_by, release_year)
 VALUES
   ('Um sonho de liberdade', 'Frank Darabont', 1994),
   ('O Poderoso Chefão', 'Francis Ford Coppola', 1972),
