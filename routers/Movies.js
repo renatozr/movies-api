@@ -24,7 +24,7 @@ router.route('/:id')
   .put([
     rescue(MoviesMiddleware.validateMovieExistence),
     MoviesMiddleware.validateInputMovie,
-    MoviesController.update,
+    rescue(MoviesController.update),
   ])
   .delete([
     rescue(MoviesMiddleware.validateMovieExistence),
