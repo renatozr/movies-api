@@ -3,7 +3,7 @@
   <h3 align="center">Movies API</h3>
 
   <p align="center">
-    A simple REST API that CRUD movies
+    A simple API that CRUD movies
     <br />
   </p>
 </div>
