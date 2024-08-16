@@ -12,7 +12,7 @@
 
 ## About The Project
 
-To exercise REST API development with Express.
+To exercise API development with Express.
 
 <!-- GETTING STARTED -->
 
